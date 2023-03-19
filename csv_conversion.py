@@ -2,25 +2,23 @@ import requests
 import csv
 import pandas as pd
 
-# JSON link
+# wikipedia link to extract data
 json_url = 'https://en.wikipedia.org/w/api.php?action=query&list=contenttranslationstats&format=json'
 
-# Get JSON data
+# Get the data
 response = requests.get(json_url)
-json_data = response.json()
+data = response.json()
 
-# Define output CSV file name
-output_file = 'data.csv'
+#output csv file
+output_file = 'data_source.csv'
+csv_header = data['query']['contenttranslationstats']['pages']
 
-# Define CSV header
-csv_header = json_data['query']['contenttranslationstats']['pages']
-
-# Define empty list to store data rows
-data_rows = []
+# list to store data
+csv_data = []
 
 # Parse JSON data and append rows to data_rows list
 for item in csv_header:
-    data_rows.append({
+    csv_data.append({
 
         'Source_language': item['sourceLanguage'],
         'target_language': item['targetLanguage'],
@@ -29,8 +27,8 @@ for item in csv_header:
     })
 
 # Convert the list of dictionaries to a DataFrame
-df = pd.DataFrame(data_rows)
+df = pd.DataFrame(csv_data)
 
-df.to_csv('data.csv', index=False)
+df.to_csv('source_data.csv', index=False)
 
  
